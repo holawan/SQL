@@ -40,3 +40,7 @@ VALUES
 ('이싸피', 26, '광주'),
 ('박삼성', 29, '구미'),
 ('최전자', 28, '부산');
+
+
+SELECT rowid, name FROM
+classmates;
