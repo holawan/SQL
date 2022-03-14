@@ -17,3 +17,5 @@ SELECT first_name FROM users WHERE age>=30;
 -- 30세 이상 김씨 조회하기
 SELECT age, first_name FROM users 
 WHERE age>=30 AND last_name = '김' ; 
+
+SELECT COUNT(*) FROM users;
