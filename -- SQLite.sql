@@ -5,3 +5,13 @@ CREATE TABLE classmates(
   id INTEGER PRIMARY KEY,
   name TEXT
 );
+
+
+DROP TABLE classmates;
+
+CREATE TABLE classmates (
+  name TEXT,
+  age INT,
+  adress TEXT
+);
+ 
