@@ -25,11 +25,12 @@ INSERT INTO classmates (
 name,age,adress)
 values ('홍길동', 30, '서울');
 
+DROP TABLE classmates;
 
 CREATE TABLE classmates (
   name TEXT NOT NULL,
   age INT NOT NULL, 
-  adress TEXT NOT NULL
+  address TEXT NOT NULL
 );
 
 
@@ -44,3 +45,16 @@ VALUES
 
 SELECT rowid, name FROM
 classmates;
+
+
+SELECT rowid, name FROM
+ classmates LIMIT 1;
+
+
+ SELECT rowid, name FROM
+ classmates LIMIT 1 OFFSET 2;
+
+ SELECT rowid,name FROM classmates 
+ WHERE address = '서울' ;
+
+ select DISTINCT age from classmates ;
