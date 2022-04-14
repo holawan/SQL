@@ -16,5 +16,13 @@ SELECT COUNT(*) FROM users_user WHERE age<=20;
 
 select COUNT(*) FROM users_user WHERE age=30 AND last_name='김';
 
---나이가 3-이거나 성이 김씨인 사람
+--나이가 30이거나 성이 김씨인 사람
 select * FROM users_user WHERE age=30 OR last_name='김';
+
+
+--지역번호 02-로 시작하는 사람 
+SELECT COUNT(*) FROM users_user WHERE phone LIKE '02-%';
+
+-- 강원도에사는 황씨들의 이름
+SELECT first_name FROM users_user WHERE last_name='황' and country='강원도';
+
