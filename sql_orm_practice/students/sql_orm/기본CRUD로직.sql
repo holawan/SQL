@@ -17,3 +17,6 @@ SELECT * FROM users_user WHERE id=102;
 --user레코드 수정 102번 글의 first_name을 '철수'로
 
 UPDATE users_user SET first_name='철수' WHERE rowid=102;
+
+--101번 글 삭제
+DELETE FROM users_user where rowid=101;
