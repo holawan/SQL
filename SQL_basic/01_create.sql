@@ -1,4 +1,7 @@
 -- SQLite
+CREATE TABLE classmates (id INTEGER PRIMARY KEY, name TEXT);
+
+
 INSERT INTO classmates (name,
 age) VALUES ('홍길동', 23);
 
@@ -13,8 +16,8 @@ classmates;
 
 DROP TABLE classmates;
 
-CREATE TABLE classmates (
 -- PK 작성시에는 무조건 integer로 해야함 . 
+CREATE TABLE classmates (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
   age INT NOT NULL, 
@@ -33,6 +36,9 @@ CREATE TABLE classmates (
   address TEXT NOT NULL
 );
 
+INSERT INTO classmates 
+VALUES 
+('홍길동',30,'서울');
 
 INSERT INTO classmates 
 VALUES 
@@ -43,7 +49,7 @@ VALUES
 ('최전자', 28, '부산');
 
 
-SELECT rowid, name FROM
+SELECT * FROM
 classmates;
 
 
@@ -52,7 +58,7 @@ SELECT rowid, name FROM
 
 
  SELECT rowid, name FROM
- classmates LIMIT 1 OFFSET 2;
+ classmates LIMIT 4 OFFSET 2;
 
  SELECT rowid,name FROM classmates 
  WHERE address = '서울' ;
