@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from .models import Article, Comment
+from django.db.models import Count
 
 # Create your views here.
 def index_1(request):
-    articles = Article.objects.order_by('-pk')
+    # articles = Article.objects.order_by('-pk')
+    #article을 가져올 때 결과에 댓글의 개수를 같이 가져옴 
+    articles = Article.objects.annotate(Count('comment')).order_by('-pk')
     context = {
         'articles': articles,
     }
