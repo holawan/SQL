@@ -1,0 +1,744 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "─ \u001b[1mAttaching packages\u001b[22m ──────────────────── tidyverse 1.3.1 ─\n",
+      "\n",
+      "\u001b[32m✔\u001b[39m \u001b[34mggplot2\u001b[39m 3.3.3     \u001b[32m✔\u001b[39m \u001b[34mpurrr  \u001b[39m 0.3.4\n",
+      "\u001b[32m✔\u001b[39m \u001b[34mtibble \u001b[39m 3.1.1     \u001b[32m✔\u001b[39m \u001b[34mdplyr  \u001b[39m 1.0.6\n",
+      "\u001b[32m✔\u001b[39m \u001b[34mtidyr  \u001b[39m 1.1.3     \u001b[32m✔\u001b[39m \u001b[34mstringr\u001b[39m 1.4.0\n",
+      "\u001b[32m✔\u001b[39m \u001b[34mreadr  \u001b[39m 1.4.0     \u001b[32m✔\u001b[39m \u001b[34mforcats\u001b[39m 0.5.1\n",
+      "\n",
+      "─ \u001b[1mConflicts\u001b[22m ───────────────────── tidyverse_conflicts() ─\n",
+      "\u001b[31m✖\u001b[39m \u001b[34mdplyr\u001b[39m::\u001b[32mfilter()\u001b[39m masks \u001b[34mstats\u001b[39m::filter()\n",
+      "\u001b[31m✖\u001b[39m \u001b[34mdplyr\u001b[39m::\u001b[32mlag()\u001b[39m    masks \u001b[34mstats\u001b[39m::lag()\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "library(tidyverse)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "The downloaded binary packages are in\n",
+      "\t/var/folders/4b/3zvkkstn5qs87gv_02cp8cwm0000gn/T//RtmpHyzdFM/downloaded_packages\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "also installing the dependencies ‘bit’, ‘bit64’, ‘plogr’\n",
+      "\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "The downloaded binary packages are in\n",
+      "\t/var/folders/4b/3zvkkstn5qs87gv_02cp8cwm0000gn/T//RtmpHyzdFM/downloaded_packages\n"
+     ]
+    }
+   ],
+   "source": [
+    "install.packages(\"DBI\")\n",
+    "install.packages(\"RSQLite\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "library(\"DBI\")\n",
+    "library(\"RSQLite\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "conn = dbConnect(SQLite(), dbname = \"/Users/gimdong-wan/Desktop/김동완 수업자료/통계 데이터베이스/RSQL/Customer.sqlite\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "0"
+      ],
+      "text/latex": [
+       "0"
+      ],
+      "text/markdown": [
+       "0"
+      ],
+      "text/plain": [
+       "[1] 0"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "dbExecute(conn, \"PRAGMA foreign_keys=ON\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "sql = \"CREATE TABLE IF NOT EXISTS Customer_Info  \n",
+    "( CID TEXT PRIMARY KEY, \n",
+    "Name TEXT,\n",
+    "Address TEXT,\n",
+    "Tel TEXT,\n",
+    "BDay TEXT,\n",
+    "SID TEXT,\n",
+    "Job TEXT,\n",
+    "Sex TEXT,\n",
+    "Married TEXT )\"\n",
+    "\n",
+    "rs = dbSendQuery(conn, sql)\n",
+    "dbClearResult(rs)\n",
+    "dbExistsTable(conn, \"Customer_Info\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dbClearResult(rs)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "TRUE"
+      ],
+      "text/latex": [
+       "TRUE"
+      ],
+      "text/markdown": [
+       "TRUE"
+      ],
+      "text/plain": [
+       "[1] TRUE"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "dbExistsTable(conn, \"Customer_Info\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "TRUE"
+      ],
+      "text/latex": [
+       "TRUE"
+      ],
+      "text/markdown": [
+       "TRUE"
+      ],
+      "text/plain": [
+       "[1] TRUE"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Customer_Score 테이블 생성하기\n",
+    "sql = \"CREATE TABLE IF NOT EXISTS Customer_Score  \n",
+    "( CID TEXT, \n",
+    "Year TEXT not null,\n",
+    "On_Score INTEGER default 0,\n",
+    "Off_Score INTEGER default 0,\n",
+    "PRIMARY KEY (CID, Year),\n",
+    "FOREIGN KEY(CID) REFERENCES Customer_Info(CID) )\"\n",
+    "\n",
+    "rs = dbSendQuery(conn, sql)\n",
+    "\n",
+    "# rs 제거\n",
+    "dbClearResult(rs)\n",
+    "\n",
+    "# 테이블이 생성되었는지(존재하는지) 확인\n",
+    "dbExistsTable(conn, \"Customer_Score\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "FALSE"
+      ],
+      "text/latex": [
+       "FALSE"
+      ],
+      "text/markdown": [
+       "FALSE"
+      ],
+      "text/plain": [
+       "[1] FALSE"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Customer_Score 테이블 삭제하기\n",
+    "rs = dbSendQuery(conn, \"DROP TABLE Customer_Score\")\n",
+    "\n",
+    "# rs 제거\n",
+    "dbClearResult(rs)\n",
+    "\n",
+    "# 테이블이 존재하는지(삭제되었는지) 확인\n",
+    "dbExistsTable(conn, \"Customer_Score\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<table class=\"dataframe\">\n",
+       "<caption>A data.frame: 1 × 9</caption>\n",
+       "<thead>\n",
+       "\t<tr><th scope=col>CID</th><th scope=col>Name</th><th scope=col>Address</th><th scope=col>Tel</th><th scope=col>BDay</th><th scope=col>SID</th><th scope=col>Job</th><th scope=col>Sex</th><th scope=col>Married</th></tr>\n",
+       "\t<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th></tr>\n",
+       "</thead>\n",
+       "<tbody>\n",
+       "\t<tr><td>100001</td><td>김민지</td><td>서울시 광진구</td><td>423-8627</td><td>1975-07-01</td><td>750701-2534218</td><td>공무원</td><td>1</td><td>0</td></tr>\n",
+       "</tbody>\n",
+       "</table>\n"
+      ],
+      "text/latex": [
+       "A data.frame: 1 × 9\n",
+       "\\begin{tabular}{lllllllll}\n",
+       " CID & Name & Address & Tel & BDay & SID & Job & Sex & Married\\\\\n",
+       " <chr> & <chr> & <chr> & <chr> & <chr> & <chr> & <chr> & <chr> & <chr>\\\\\n",
+       "\\hline\n",
+       "\t 100001 & 김민지 & 서울시 광진구 & 423-8627 & 1975-07-01 & 750701-2534218 & 공무원 & 1 & 0\\\\\n",
+       "\\end{tabular}\n"
+      ],
+      "text/markdown": [
+       "\n",
+       "A data.frame: 1 × 9\n",
+       "\n",
+       "| CID &lt;chr&gt; | Name &lt;chr&gt; | Address &lt;chr&gt; | Tel &lt;chr&gt; | BDay &lt;chr&gt; | SID &lt;chr&gt; | Job &lt;chr&gt; | Sex &lt;chr&gt; | Married &lt;chr&gt; |\n",
+       "|---|---|---|---|---|---|---|---|---|\n",
+       "| 100001 | 김민지 | 서울시 광진구 | 423-8627 | 1975-07-01 | 750701-2534218 | 공무원 | 1 | 0 |\n",
+       "\n"
+      ],
+      "text/plain": [
+       "  CID    Name   Address       Tel      BDay       SID            Job    Sex\n",
+       "1 100001 김민지 서울시 광진구 423-8627 1975-07-01 750701-2534218 공무원 1  \n",
+       "  Married\n",
+       "1 0      "
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Customer_Info 테이블에 데이터 insert\n",
+    "sql = \" INSERT INTO Customer_Info \n",
+    "VALUES ('100001', '김민지', '서울시 광진구', '423-8627', \n",
+    "'1975-07-01', '750701-2534218', '공무원', '1', '0') \"\n",
+    "\n",
+    "rs = dbSendQuery(conn, sql)\n",
+    "dbClearResult(rs)\n",
+    "\n",
+    "# Customer_Info 테이블에 데이터 삽입 결과 확인\n",
+    "dbGetQuery(conn, \"SELECT * FROM Customer_Info\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Customer_Score 테이블에 데이터 insert\n",
+    "sql = \" INSERT INTO Customer_Score VALUES ('100001', '2012', 42, 111) \"\n",
+    "rs = dbSendQuery(conn, sql)\n",
+    "dbClearResult(rs)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "sql = \" INSERT INTO Customer_Score VALUES ('100001', '2013', 58, 89) \"\n",
+    "rs = dbSendQuery(conn, sql)\n",
+    "dbClearResult(rs)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<table class=\"dataframe\">\n",
+       "<caption>A data.frame: 2 × 4</caption>\n",
+       "<thead>\n",
+       "\t<tr><th scope=col>CID</th><th scope=col>Year</th><th scope=col>On_Score</th><th scope=col>Off_Score</th></tr>\n",
+       "\t<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th></tr>\n",
+       "</thead>\n",
+       "<tbody>\n",
+       "\t<tr><td>100001</td><td>2012</td><td>42</td><td>111</td></tr>\n",
+       "\t<tr><td>100001</td><td>2013</td><td>58</td><td> 89</td></tr>\n",
+       "</tbody>\n",
+       "</table>\n"
+      ],
+      "text/latex": [
+       "A data.frame: 2 × 4\n",
+       "\\begin{tabular}{llll}\n",
+       " CID & Year & On\\_Score & Off\\_Score\\\\\n",
+       " <chr> & <chr> & <int> & <int>\\\\\n",
+       "\\hline\n",
+       "\t 100001 & 2012 & 42 & 111\\\\\n",
+       "\t 100001 & 2013 & 58 &  89\\\\\n",
+       "\\end{tabular}\n"
+      ],
+      "text/markdown": [
+       "\n",
+       "A data.frame: 2 × 4\n",
+       "\n",
+       "| CID &lt;chr&gt; | Year &lt;chr&gt; | On_Score &lt;int&gt; | Off_Score &lt;int&gt; |\n",
+       "|---|---|---|---|\n",
+       "| 100001 | 2012 | 42 | 111 |\n",
+       "| 100001 | 2013 | 58 |  89 |\n",
+       "\n"
+      ],
+      "text/plain": [
+       "  CID    Year On_Score Off_Score\n",
+       "1 100001 2012 42       111      \n",
+       "2 100001 2013 58        89      "
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Customer_Score 테이블에 데이터 삽입 결과 확인\n",
+    "dbGetQuery(conn, \"SELECT * FROM Customer_Score \")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "TRUE"
+      ],
+      "text/latex": [
+       "TRUE"
+      ],
+      "text/markdown": [
+       "TRUE"
+      ],
+      "text/plain": [
+       "[1] TRUE"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# 교수 테이블 생성하기\n",
+    "sql = \"CREATE TABLE IF NOT EXISTS Prof\n",
+    "( PID TEXT PRIMARY KEY, \n",
+    "PName TEXT not null,\n",
+    "PDept TEXT )\"\n",
+    "\n",
+    "rs = dbSendQuery(conn, sql)\n",
+    "\n",
+    "# rs 제거\n",
+    "dbClearResult(rs)\n",
+    "\n",
+    "# 테이블이 생성되었는지(존재하는지) 확인\n",
+    "dbExistsTable(conn, \"Prof\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 47,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "TRUE"
+      ],
+      "text/latex": [
+       "TRUE"
+      ],
+      "text/markdown": [
+       "TRUE"
+      ],
+      "text/plain": [
+       "[1] TRUE"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "sql = \"CREATE TABLE IF NOT EXISTS Student  \n",
+    "( SID TEXT PRIMARY KEY, \n",
+    "Name TEXT not null,\n",
+    "Dept TEXT not null,\n",
+    "Grade INTEGER not null,\n",
+    "PID TEXT,\n",
+    "FOREIGN KEY(PID) REFERENCES Prof(PID) ) \"\n",
+    "\n",
+    "rs = dbSendQuery(conn, sql)\n",
+    "dbClearResult(rs)\n",
+    "dbExistsTable(conn, \"Student\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 48,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "TRUE"
+      ],
+      "text/latex": [
+       "TRUE"
+      ],
+      "text/markdown": [
+       "TRUE"
+      ],
+      "text/plain": [
+       "[1] TRUE"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "sql = \"CREATE TABLE IF NOT EXISTS Curriculum  \n",
+    "( SubjectID TEXT PRIMARY KEY, \n",
+    "SubjectName TEXT not null ) \"\n",
+    "\n",
+    "rs = dbSendQuery(conn, sql)\n",
+    "dbClearResult(rs)\n",
+    "dbExistsTable(conn, \"Curriculum\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "TRUE"
+      ],
+      "text/latex": [
+       "TRUE"
+      ],
+      "text/markdown": [
+       "TRUE"
+      ],
+      "text/plain": [
+       "[1] TRUE"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "sql = \"CREATE TABLE IF NOT EXISTS Score  \n",
+    "( SID TEXT , \n",
+    "SubjectID TEXT ,\n",
+    "Score INTEGER default 0,\n",
+    "PRIMARY KEY(SID, SubjectID)\n",
+    "FOREIGN KEY(SID) REFERENCES Student(SID),\n",
+    "FOREIGN KEY(SubjectID) REFERENCES Curriculum(SubectID)) \"\n",
+    "\n",
+    "rs = dbSendQuery(conn, sql)\n",
+    "dbClearResult(rs)\n",
+    "dbExistsTable(conn, \"Score\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 52,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<SQLiteConnection>\n",
+       "  Path: /Users/gimdong-wan/Desktop/김동완 수업자료/통계 데이터베이스/RSQL/Customer.sqlite\n",
+       "  Extensions: TRUE"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "conn"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 53,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<table class=\"dataframe\">\n",
+       "<caption>A data.frame: 0 × 3</caption>\n",
+       "<thead>\n",
+       "\t<tr><th scope=col>PID</th><th scope=col>PName</th><th scope=col>PDept</th></tr>\n",
+       "\t<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th></tr>\n",
+       "</thead>\n",
+       "<tbody>\n",
+       "</tbody>\n",
+       "</table>\n"
+      ],
+      "text/latex": [
+       "A data.frame: 0 × 3\n",
+       "\\begin{tabular}{lll}\n",
+       " PID & PName & PDept\\\\\n",
+       " <chr> & <chr> & <chr>\\\\\n",
+       "\\hline\n",
+       "\\end{tabular}\n"
+      ],
+      "text/markdown": [
+       "\n",
+       "A data.frame: 0 × 3\n",
+       "\n",
+       "| PID &lt;chr&gt; | PName &lt;chr&gt; | PDept &lt;chr&gt; |\n",
+       "|---|---|---|\n",
+       "\n"
+      ],
+      "text/plain": [
+       "     PID PName PDept"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/html": [
+       "<table class=\"dataframe\">\n",
+       "<caption>A data.frame: 0 × 5</caption>\n",
+       "<thead>\n",
+       "\t<tr><th scope=col>SID</th><th scope=col>Name</th><th scope=col>Dept</th><th scope=col>Grade</th><th scope=col>PID</th></tr>\n",
+       "\t<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;chr&gt;</th></tr>\n",
+       "</thead>\n",
+       "<tbody>\n",
+       "</tbody>\n",
+       "</table>\n"
+      ],
+      "text/latex": [
+       "A data.frame: 0 × 5\n",
+       "\\begin{tabular}{lllll}\n",
+       " SID & Name & Dept & Grade & PID\\\\\n",
+       " <chr> & <chr> & <chr> & <int> & <chr>\\\\\n",
+       "\\hline\n",
+       "\\end{tabular}\n"
+      ],
+      "text/markdown": [
+       "\n",
+       "A data.frame: 0 × 5\n",
+       "\n",
+       "| SID &lt;chr&gt; | Name &lt;chr&gt; | Dept &lt;chr&gt; | Grade &lt;int&gt; | PID &lt;chr&gt; |\n",
+       "|---|---|---|---|---|\n",
+       "\n"
+      ],
+      "text/plain": [
+       "     SID Name Dept Grade PID"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/html": [
+       "<table class=\"dataframe\">\n",
+       "<caption>A data.frame: 0 × 2</caption>\n",
+       "<thead>\n",
+       "\t<tr><th scope=col>SubjectID</th><th scope=col>SubjectName</th></tr>\n",
+       "\t<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th></tr>\n",
+       "</thead>\n",
+       "<tbody>\n",
+       "</tbody>\n",
+       "</table>\n"
+      ],
+      "text/latex": [
+       "A data.frame: 0 × 2\n",
+       "\\begin{tabular}{ll}\n",
+       " SubjectID & SubjectName\\\\\n",
+       " <chr> & <chr>\\\\\n",
+       "\\hline\n",
+       "\\end{tabular}\n"
+      ],
+      "text/markdown": [
+       "\n",
+       "A data.frame: 0 × 2\n",
+       "\n",
+       "| SubjectID &lt;chr&gt; | SubjectName &lt;chr&gt; |\n",
+       "|---|---|\n",
+       "\n"
+      ],
+      "text/plain": [
+       "     SubjectID SubjectName"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/html": [
+       "<table class=\"dataframe\">\n",
+       "<caption>A data.frame: 0 × 3</caption>\n",
+       "<thead>\n",
+       "\t<tr><th scope=col>SID</th><th scope=col>SubjectID</th><th scope=col>Score</th></tr>\n",
+       "\t<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th></tr>\n",
+       "</thead>\n",
+       "<tbody>\n",
+       "</tbody>\n",
+       "</table>\n"
+      ],
+      "text/latex": [
+       "A data.frame: 0 × 3\n",
+       "\\begin{tabular}{lll}\n",
+       " SID & SubjectID & Score\\\\\n",
+       " <chr> & <chr> & <int>\\\\\n",
+       "\\hline\n",
+       "\\end{tabular}\n"
+      ],
+      "text/markdown": [
+       "\n",
+       "A data.frame: 0 × 3\n",
+       "\n",
+       "| SID &lt;chr&gt; | SubjectID &lt;chr&gt; | Score &lt;int&gt; |\n",
+       "|---|---|---|\n",
+       "\n"
+      ],
+      "text/plain": [
+       "     SID SubjectID Score"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "dbGetQuery(conn, \"SELECT * FROM Prof\")\n",
+    "dbGetQuery(conn, \"SELECT * FROM Student\")\n",
+    "dbGetQuery(conn, \"SELECT * FROM Curriculum\")\n",
+    "dbGetQuery(conn, \"SELECT * FROM Score\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "R",
+   "language": "R",
+   "name": "ir"
+  },
+  "language_info": {
+   "codemirror_mode": "r",
+   "file_extension": ".r",
+   "mimetype": "text/x-r-source",
+   "name": "R",
+   "pygments_lexer": "r",
+   "version": "4.0.2"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
